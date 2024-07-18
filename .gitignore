@@ -1,0 +1,7 @@
+data/
+model/
+tensorboard/
+.venv/
+*.xml
+.idea/
+notebooks/.ipynb_checkpoints/
