@@ -113,10 +113,17 @@ class ConvertNonNumericToNaN(BaseEstimator, TransformerMixin):
 #         return df
 
 def save_model(model_pipeline: sklearn.pipeline, base_path: str, model_path: str, date: str, file_name: str) -> None:
+    full_dir = f"{base_path}/{model_path}/{date}"
     full_path = f"{base_path}/{model_path}/{date}/{file_name}"
-    joblib.load(model_pipeline, full_path)
+    if not os.path.exists(full_dir):
+        os.makedirs(full_dir)
+    joblib.dump(model_pipeline, full_path)
 
-
+def read_latest_model(base_path: str, model_path):
+    model_path, date = get_latest_path_by_date(base_path, model_path)
+    full_path = f"{model_path}/{date}/classifier.pkl"
+    model = joblib.load(full_path)
+    return model
 class ClfSwitcher(BaseEstimator):
     def __init__(self, estimator=SGDClassifier()):
         self.estimator = estimator

@@ -1,11 +1,14 @@
 ## data config
+import os
+
 DATASET_NAME = "yeanzc/telco-customer-churn-ibm-dataset"
 KAGGLE_FILE = "kaggle.json"
 KAGGLE_PATH = "/data/kaggle_data"
-BASE_PATH = "/Users/rzt/Desktop/Personal/churn-prediction"
+BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 PREPROCESS_PATH = "/data/preprocessing"
 MODEL_PATH = "/model/"
 DATA_PATH = "data"
+REPORT_PATH = "/reports/"
 FILE_NAME = "Telco_customer_churn.xlsx"
 TENSORBOARD_PATH = "tensorboard/"
 

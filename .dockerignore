@@ -1,0 +1,9 @@
+.idea/
+.venv/
+data/
+logs/
+model/
+notebooks/
+plugins/
+reports/
+tensorboard/

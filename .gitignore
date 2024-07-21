@@ -1,6 +1,10 @@
 data/
 model/
 tensorboard/
+dags/__pycache__
+reports/
+db/
+logs/
 .venv/
 *.xml
 .idea/
