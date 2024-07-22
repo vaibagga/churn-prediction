@@ -6,6 +6,7 @@ KAGGLE_FILE = "kaggle.json"
 KAGGLE_PATH = "/data/kaggle_data"
 BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 PREPROCESS_PATH = "/data/preprocessing"
+PREDICTION_PATH = "/data/prediction"
 MODEL_PATH = "/model/"
 DATA_PATH = "data"
 REPORT_PATH = "/reports/"

@@ -119,11 +119,14 @@ def save_model(model_pipeline: sklearn.pipeline, base_path: str, model_path: str
         os.makedirs(full_dir)
     joblib.dump(model_pipeline, full_path)
 
+
 def read_latest_model(base_path: str, model_path):
     model_path, date = get_latest_path_by_date(base_path, model_path)
     full_path = f"{model_path}/{date}/classifier.pkl"
     model = joblib.load(full_path)
     return model
+
+
 class ClfSwitcher(BaseEstimator):
     def __init__(self, estimator=SGDClassifier()):
         self.estimator = estimator

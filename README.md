@@ -49,3 +49,15 @@ docker-compose up airflow-init
 docker-compose up
 ```
 Login using "admin" as username and "airflow" as password.
+
+# Running the inference server
+## On local UNIX (Mac/Linux)
+The inference server can be run only when ```predict.py``` step has been run atleast once.
+To run the FastAPI page, ensure the Redis server is running and start the FastAPI server.
+```commandline
+uvicorn main:app --reload
+```
+Go to http://127.0.0.1:8000/docs
+
+## Using Docker
+Follow the same instructions as training pipeline, as it installs and starts all the required services.

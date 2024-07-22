@@ -2,8 +2,8 @@ import logging
 
 import pandas as pd
 import redis
-from config import BASE_PATH, MODEL_PATH, KAGGLE_PATH, FILE_NAME, delete_columns
-from utils import read_latest_model, read_dataframe_excel, get_latest_path_by_date
+from config import BASE_PATH, MODEL_PATH, KAGGLE_PATH, FILE_NAME, delete_columns, PREDICTION_PATH
+from utils import read_latest_model, read_dataframe_excel, get_latest_path_by_date, save_file_with_date
 
 
 def predict_on_batch(df, model):
@@ -11,7 +11,7 @@ def predict_on_batch(df, model):
         lambda x: x["total_charges"] if x["total_charges"] != ' ' else x["monthly_charges"] * x["tenure_months"],
         axis=1)
     df_ = df.drop(delete_columns, axis=1)
-    prediction = model.predict(df_)
+    prediction = model.predict_proba(df_)[:,1]
     df["prediction"] = prediction
     return df
 
@@ -29,6 +29,7 @@ def main():
     df = read_dataframe_excel(df_path, date, FILE_NAME)
     model = read_latest_model(BASE_PATH, MODEL_PATH)
     prediction = predict_on_batch(df, model)
+    save_file_with_date(prediction, BASE_PATH, PREDICTION_PATH, "prediction.csv", date)
     save_predictions(prediction)
 
 
