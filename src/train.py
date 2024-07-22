@@ -1,5 +1,6 @@
 import logging
 import datetime
+import os
 import time
 
 import numpy as np
@@ -42,6 +43,7 @@ def main():
     writer.add_scalar('training/train_size', train.shape[0], int(time.time()))
     # writer.add_scalar('training/val_size', val.shape[0])
     writer.add_scalar('training/test_size', test.shape[0], int(time.time()))
+    if os.listdir():
 
     categorical_preprocessor = Pipeline(steps=[
         ('imputer', SimpleImputer(strategy='most_frequent')),

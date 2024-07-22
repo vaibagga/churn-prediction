@@ -45,10 +45,10 @@ Use the UI to run training and predicion pipeline
 
 ### Using Docker
 ```
-docker-compose up airflow-init
-docker-compose up
+docker build -t airflow_fastapi_tensorboard .
+docker run -p 8000:8000 -p 8080:8080 -p 6006:6006 -v $(pwd)/logs:/logs -v $(pwd)/dags:/app/airflow/dags airflow_fastapi_tensorboard
 ```
-Login using "admin" as username and "airflow" as password.
+Login using "admin" as username and "admin" as password.
 
 # Running the inference server
 ## On local UNIX (Mac/Linux)
@@ -60,4 +60,14 @@ uvicorn main:app --reload
 Go to http://127.0.0.1:8000/docs
 
 ## Using Docker
-Follow the same instructions as training pipeline, as it installs and starts all the required services.
+Follow the same instructions as training pipeline, as it installs and starts all the required services. Go to the same URL mentioned above.
+
+# Running tensorboard
+## On local UNIX (Max/Linux)
+The logs for tensorboard are stored in ```tensorboard/``` directory. To run the board, run
+```commandline
+ tensorboard --logdir=tensorboard
+```
+Go to http://localhost:6006
+## Using Docker
+Run the docker service and go to the same URL.

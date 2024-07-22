@@ -2,8 +2,8 @@ import logging
 
 import pandas as pd
 import redis
-from config import BASE_PATH, MODEL_PATH, KAGGLE_PATH, FILE_NAME, delete_columns, PREDICTION_PATH
-from utils import read_latest_model, read_dataframe_excel, get_latest_path_by_date, save_file_with_date
+from src.config import BASE_PATH, MODEL_PATH, KAGGLE_PATH, FILE_NAME, delete_columns, PREDICTION_PATH
+from src.utils import read_latest_model, read_dataframe_excel, get_latest_path_by_date, save_file_with_date
 
 
 def predict_on_batch(df, model):

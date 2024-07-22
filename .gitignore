@@ -9,3 +9,4 @@ logs/
 *.xml
 .idea/
 notebooks/.ipynb_checkpoints/
+/kaggle.json

@@ -15,7 +15,7 @@ except IOError:
     logging.error("Move kaggle.json to directory ~/HOME/.kaggle")
     sys.exit(1)
 
-from config import *
+from src.config import *
 
 
 def main():
