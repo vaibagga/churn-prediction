@@ -15,12 +15,12 @@ except IOError:
     logging.error("Move kaggle.json to directory ~/HOME/.kaggle")
     sys.exit(1)
 
-from src.config import *
+from config import *
 
 
 def main():
     DATE = datetime.today().strftime('%Y-%m-%d')
-    download_path = f"../{KAGGLE_PATH}/{DATE}/"
+    download_path = f"{BASE_PATH}/{KAGGLE_PATH}/{DATE}/"
     logging.info(f"Donwloading data from Kaggle for {DATE}")
     if os.path.exists(download_path):
         logging.info(f"Data already exists for {DATE}")

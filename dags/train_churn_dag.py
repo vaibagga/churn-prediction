@@ -10,7 +10,7 @@ default_args = {
     'depends_on_past': False,
     'start_date': datetime(2023, 7, 20),
     'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'retry_delay': timedelta(minutes=1),
 }
 
 # Define the DAG
@@ -25,7 +25,7 @@ base_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 # Define the paths to the Python scripts
 download_script_path = f'/app/src/download_data.py'
 split_script_path = f'/app/src/split_data.py'
-train_script_path = f'/app/src/split_data.py'
+train_script_path = f'/app/src/train.py'
 
 
 def run_python_command(file_path, task_id):

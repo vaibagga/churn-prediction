@@ -4,7 +4,7 @@ import os
 DATASET_NAME = "yeanzc/telco-customer-churn-ibm-dataset"
 KAGGLE_FILE = "kaggle.json"
 KAGGLE_PATH = "/data/kaggle_data"
-BASE_PATH = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+BASE_PATH = "/app/"
 PREPROCESS_PATH = "/data/preprocessing"
 PREDICTION_PATH = "/data/prediction"
 MODEL_PATH = "/model/"

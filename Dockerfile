@@ -14,13 +14,19 @@ COPY . /app
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     build-essential \
+    lsb-release \
+    curl \
+    gpg \
+    redis-server \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir tensorboard supervisor apache-airflow
 
-COPY ./kaggle.json /.kaggle/
+RUN mkdir model reports tensorboard .kaggle
+
+COPY ./kaggle.json /app/.kaggle/
 
 # Initialize Airflow database
 RUN airflow db init

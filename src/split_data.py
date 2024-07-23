@@ -5,8 +5,8 @@ import time
 
 from sklearn.model_selection import train_test_split
 
-from src.utils import *
-from src.config import *
+from utils import *
+from config import *
 from tensorboardX import SummaryWriter
 
 logging.basicConfig(

@@ -52,6 +52,7 @@ Login using "admin" as username and "admin" as password.
 
 # Running the inference server
 ## On local UNIX (Mac/Linux)
+Note: If running on local, change the ```BASE_PATH``` in ```config.py``` to the project directory.
 The inference server can be run only when ```predict.py``` step has been run atleast once.
 To run the FastAPI page, ensure the Redis server is running and start the FastAPI server.
 ```commandline

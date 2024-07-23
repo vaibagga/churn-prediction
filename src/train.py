@@ -19,7 +19,7 @@ from tensorboardX import SummaryWriter
 from config import KAGGLE_PATH, BASE_PATH, PREPROCESS_PATH, TENSORBOARD_PATH, target_feature, num_features, \
     cat_features, MODEL_PATH, REPORT_PATH, delete_columns
 from utils import get_latest_path_by_date, read_dataframe_csv, ConvertNonNumericToNaN, ClfSwitcher, save_model, \
-    save_file_with_date
+    save_file_with_date, read_latest_model
 from model_grid import hyper_parameters
 
 logging.basicConfig(
@@ -43,37 +43,44 @@ def main():
     writer.add_scalar('training/train_size', train.shape[0], int(time.time()))
     # writer.add_scalar('training/val_size', val.shape[0])
     writer.add_scalar('training/test_size', test.shape[0], int(time.time()))
-    if os.listdir():
-
-    categorical_preprocessor = Pipeline(steps=[
-        ('imputer', SimpleImputer(strategy='most_frequent')),
-        ('onehot', OneHotEncoder(handle_unknown='ignore'))
-    ])
-
-    numerical_preprocessor = Pipeline(steps=[
-        ('convert_to_nan', ConvertNonNumericToNaN(num_features)),
-        ('imputer', SimpleImputer(strategy='mean')),
-        ('scaler', StandardScaler())
-    ])
-
-    preprocessor = ColumnTransformer(
-        transformers=[
-            ('num', numerical_preprocessor, num_features),
-            ('cat', categorical_preprocessor, cat_features)
-        ])
-
-    # Create pipeline
-    pipeline = Pipeline([('preprocessor', preprocessor),
-                         ('clf', ClfSwitcher())])
+    model_path, last_train = get_latest_path_by_date(BASE_PATH, MODEL_PATH, return_none=True)
     train_sans_col = train.drop(delete_columns, axis=1)
     test_sans_col = test.drop(delete_columns, axis=1)
-
     X_train, y_train = train_sans_col.drop(target_feature, axis=1), train_sans_col[target_feature]
     X_test, y_test = test_sans_col.drop(target_feature, axis=1), test_sans_col[target_feature]
+    if last_train is not None:
+        best_model = read_latest_model(BASE_PATH, MODEL_PATH)
+        best_model.fit(X_train, y_train)
+        logging.info("Retraining model")
+    else:
+        logging.info("Training for the first time")
+        categorical_preprocessor = Pipeline(steps=[
+            ('imputer', SimpleImputer(strategy='most_frequent')),
+            ('onehot', OneHotEncoder(handle_unknown='ignore'))
+        ])
 
-    gscv = GridSearchCV(pipeline, hyper_parameters, cv=5, n_jobs=-1, return_train_score=True, verbose=3)
-    gscv.fit(X_train, y_train)
-    best_model = gscv.best_estimator_
+        numerical_preprocessor = Pipeline(steps=[
+            ('convert_to_nan', ConvertNonNumericToNaN(num_features)),
+            ('imputer', SimpleImputer(strategy='mean')),
+            ('scaler', StandardScaler())
+        ])
+
+        preprocessor = ColumnTransformer(
+            transformers=[
+                ('num', numerical_preprocessor, num_features),
+                ('cat', categorical_preprocessor, cat_features)
+            ])
+
+        # Create pipeline
+        pipeline = Pipeline([('preprocessor', preprocessor),
+                             ('clf', ClfSwitcher())])
+
+        gscv = GridSearchCV(pipeline, hyper_parameters, cv=5, n_jobs=-1, return_train_score=True, verbose=3)
+        gscv.fit(X_train, y_train)
+        best_model = gscv.best_estimator_
+        results = pd.DataFrame(gscv.cv_results_)
+        save_file_with_date(results, BASE_PATH, REPORT_PATH, "report.csv", date)
+
     y_pred = best_model.predict(X_test)
     test["prediction"] = y_pred
     misclassified = test[test["prediction"] != test["churn_value"]]
@@ -83,9 +90,6 @@ def main():
     writer.add_scalar('training/f1', f1, int(time.time()))
     report = classification_report(y_test, y_pred, output_dict=True)
     best_model_performance = pd.DataFrame(report).transpose()
-
-    results = pd.DataFrame(gscv.cv_results_)
-    save_file_with_date(results, BASE_PATH, REPORT_PATH, "report.csv", date)
     save_file_with_date(misclassified, BASE_PATH, REPORT_PATH, "misclassified.csv", date)
     save_model(best_model, BASE_PATH, MODEL_PATH, date, "classifier.pkl")
     save_file_with_date(best_model_performance, BASE_PATH, REPORT_PATH, "best_model_report.csv", date)
@@ -96,3 +100,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
